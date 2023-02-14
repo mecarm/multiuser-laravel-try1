@@ -11,6 +11,16 @@
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
+                        <div class="form-group">
+                            <label for="user_type">User Type</label>
+                        
+                            <select id="user_type" class="d-block mt-1 w-100" name="user_type">
+                                <option value="user">User</option>
+                                <option value="doctor">Doctor</option>
+                            </select>
+                        </div>
+                        
+
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

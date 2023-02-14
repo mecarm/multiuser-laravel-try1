@@ -16,12 +16,19 @@ class RedirectIfAuthenticated
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, ...$guards)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect(RouteServiceProvider::HOME);
+        if (empty($guards)) {
+            $guards = [config('auth.defaults.guard')];
         }
-
+    
+        foreach ($guards as $guard) {
+            $userType = $request->input('user_type', 'user');
+    
+            auth()->shouldUse($userType . '.' . $guard);
+        }
+    
         return $next($request);
     }
+    
 }

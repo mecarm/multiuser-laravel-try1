@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Doctor;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,6 +23,11 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
+
+    protected function userType(Request $request)
+    {
+        return $request->input('user_type', 'user');
+    }
 
     use RegistersUsers;
 
@@ -62,12 +69,26 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
+
     protected function create(array $data)
-    {
+{
+    $userType = $this->userType(request());
+
+    if ($userType === 'doctor') {
+        return Doctor::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'address' => $data['address'],
+        ]);
+    } 
+    else {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
     }
+}
+
 }
